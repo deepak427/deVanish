@@ -29,4 +29,8 @@ fastify.listen({ port: PORT }, (err) => {
 
 fastify.get("/", async (request, reply) => {
   reply.send({ message: "Twilio Media Stream Server is running!" });
+<<<<<<< HEAD
 });
+=======
+});
+>>>>>>> 1ddcc8062f89f0264909e06a1a3475e7091f54c6
