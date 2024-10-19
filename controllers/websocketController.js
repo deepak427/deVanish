@@ -39,6 +39,8 @@ export const handleWebSocketConnection = (connection, req, OPENAI_API_KEY) => {
 
     console.log("Sending session update:", JSON.stringify(sessionUpdate));
     openAiWs.send(JSON.stringify(sessionUpdate));
+
+    sendInitialConversationItem();
   };
 
   const sendInitialConversationItem = () => {
