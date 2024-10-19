@@ -9,3 +9,4 @@ export const LOG_EVENT_TYPES = [
     'input_audio_buffer.speech_started',
     'session.created'
 ];
+export const SHOW_TIMING_MATH = false;
