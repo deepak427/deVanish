@@ -13,6 +13,7 @@ export const handleWebSocketConnection = (connection, req, OPENAI_API_KEY) => {
   let lastAssistantItem = null;
   let markQueue = [];
   let responseStartTimestampTwilio = null;
+
   let audioChunks = [];
 
   const openAiWs = new WebSocket(
@@ -184,7 +185,7 @@ export const handleWebSocketConnection = (connection, req, OPENAI_API_KEY) => {
               audio: data.media.payload,
             };
             openAiWs.send(JSON.stringify(audioAppend));
-            audioChunks.push(latestMediaTimestamp);
+            audioChunks.push(data.media.payload);
           }
           break;
         case "start":
@@ -211,13 +212,12 @@ export const handleWebSocketConnection = (connection, req, OPENAI_API_KEY) => {
   connection.on("close", async () => {
     if (openAiWs.readyState === WebSocket.OPEN) openAiWs.close();
 
-    const completeAudioBase64 = audioChunks.join(''); 
+    const completeAudioBuffer = Buffer.concat(
+      audioChunks.map((chunk) => Buffer.from(chunk, "base64"))
+    );
   
-    const completeAudioBuffer = Buffer.from(completeAudioBase64, 'base64');
-    
     try {
-
-      await writeFile('conversation_recording.wav', completeAudioBuffer);
+      await writeFile("conversation_recording.raw", completeAudioBuffer);
       console.log("Conversation recording saved as conversation_recording.wav");
     } catch (error) {
       console.error("Error saving the audio recording:", error);
