@@ -18,7 +18,7 @@ fastify.register(fastifyFormBody);
 fastify.register(fastifyWs);
 
 fastify.register(callRoutes);
-fastify.register(websocketRoutes);
+fastify.register(websocketRoutes, OPENAI_API_KEY);
 
 const PORT = process.env.PORT || 5050;
 fastify.listen({ port: PORT }, (err) => {
