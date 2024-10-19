@@ -5,6 +5,7 @@ import {
   LOG_EVENT_TYPES,
   SHOW_TIMING_MATH,
 } from "../utils/constants.js";
+import { writeFile } from 'fs/promises';
 
 export const handleWebSocketConnection = (connection, req, OPENAI_API_KEY) => {
   let streamSid = null;
@@ -40,7 +41,7 @@ export const handleWebSocketConnection = (connection, req, OPENAI_API_KEY) => {
     console.log("Sending session update:", JSON.stringify(sessionUpdate));
     openAiWs.send(JSON.stringify(sessionUpdate));
 
-    sendInitialConversationItem();
+    // sendInitialConversationItem();
   };
 
   const sendInitialConversationItem = () => {
