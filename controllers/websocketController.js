@@ -5,7 +5,7 @@ import {
   LOG_EVENT_TYPES,
   SHOW_TIMING_MATH,
 } from "../utils/constants.js";
-import { writeFile } from 'fs/promises';
+import { writeFile } from "fs/promises";
 
 export const handleWebSocketConnection = (connection, req, OPENAI_API_KEY) => {
   let streamSid = null;
@@ -184,7 +184,7 @@ export const handleWebSocketConnection = (connection, req, OPENAI_API_KEY) => {
               audio: data.media.payload,
             };
             openAiWs.send(JSON.stringify(audioAppend));
-            audioChunks.push(latestMediaTimestamp);
+            audioChunks.push(data.media.payload); // Store the actual audio data
           }
           break;
         case "start":
@@ -211,19 +211,18 @@ export const handleWebSocketConnection = (connection, req, OPENAI_API_KEY) => {
   connection.on("close", async () => {
     if (openAiWs.readyState === WebSocket.OPEN) openAiWs.close();
 
-    const completeAudioBase64 = audioChunks.join(''); 
-  
-    const completeAudioBuffer = Buffer.from(completeAudioBase64, 'base64');
-    
-    try {
+    const completeAudioBase64 = audioChunks.join("");
 
-      await writeFile('conversation_recording.wav', completeAudioBuffer);
+    const completeAudioBuffer = Buffer.from(completeAudioBase64, "base64");
+
+    try {
+      await writeFile("conversation_recording.wav", completeAudioBuffer);
       console.log("Conversation recording saved as conversation_recording.wav");
     } catch (error) {
       console.error("Error saving the audio recording:", error);
     }
   });
 
-  openAiWs.on("close", () => console.log("Disconnected from OpenAI API",));
+  openAiWs.on("close", () => console.log("Disconnected from OpenAI API"));
   openAiWs.on("error", (error) => console.error("WebSocket error:", error));
 };
