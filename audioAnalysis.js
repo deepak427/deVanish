@@ -12,3 +12,4 @@ let transcript = await client.transcripts.transcribe({
 });
 
 const transcribedText = transcript.text;
+console.log(transcribedText);
